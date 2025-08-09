@@ -1,51 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>برگه کارآگاهی کلُو</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>برگه بازی کلُو — نسخه فارسی</title>
   <style>
-    body { font-family: sans-serif; direction: rtl; }
-    h2 { margin-top: 1em; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 8px; border: 1px solid #ccc; text-align: center; }
+    :root{
+      --bg:#f7f8fb;
+      --card:#ffffff;
+      --accent:#2b6cb0;
+      --muted:#6b7280;
+      --ok:#16a34a;
+      --ques:#f59e0b;
+      --bad:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Tahoma","Vazirmatn", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:#111827;
+      direction:rtl;
+      padding:20px;
+      -webkit-font-smoothing:antialiased;
+    }
+    header{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+    header h1{margin:0;font-size:20px}
+    .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .btn{
+      background:var(--card);
+      border:1px solid #e6e9ef;
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn.primary{
+      background:var(--accent);
+      color:white;
+      border-color:transparent;
+    }
+    .btn.warn{background:var(--ques); color:white}
+    .btn.danger{background:var(--bad); color:white}
+    .mode-toggle .btn.active{
+      box-shadow:0 0 0 3px rgba(43,108,176,0.12);
+      border-color:var(--accent);
+    }
+
+    main{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:12px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:12px;
+      box-shadow:0 1px 3px rgba(15,23,42,0.04);
+      min-height:120px;
+    }
+    .card h2{
+      margin:0 0 8px 0;
+      font-size:16px;
+    }
+
+    ul.item-list{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:grid;
+      gap:6px;
+    }
+    li.item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:8px;
+      border-radius:8px;
+      border:1px solid transparent;
+      cursor:pointer;
+      user-select:none;
+    }
+    li.item:hover{background:#fbfdff}
+    .item .label{flex:1;text-align:right;padding-right:8px}
+    .marker{
+      width:34px;height:28px;border-radius:6px;
+      display:inline-grid;place-items:center;font-weight:700;
+    }
+    .marker.none{background:transparent;color:var(--muted);border:1px dashed #e6e9ef}
+    .marker.ok{background:rgba(22,163,74,0.12);color:var(--ok);border:1px solid rgba(22,163,74,0.16)}
+    .marker.q{background:rgba(245,158,11,0.12);color:var(--ques);border:1px solid rgba(245,158,11,0.16)}
+    .marker.bad{background:rgba(239,68,68,0.08);color:var(--bad);border:1px solid rgba(239,68,68,0.12)}
+
+    .small{
+      font-size:13px;color:var(--muted);
+    }
+
+    footer{
+      margin-top:14px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    /* responsive touch bigger targets */
+    @media (pointer:coarse){
+      .btn{padding:12px 14px}
+      li.item{padding:12px}
+    }
   </style>
 </head>
 <body>
-  <h1>برگه کارآگاهی کلُو — نسخه استاندارد</h1>
-  <h2>مظنون‌ها</h2>
-  <table>
-    <tr><th>نام</th><th>وضعیت</th></tr>
-    <tr><td>سرهنگ خردل</td><td></td></tr>
-    <tr><td>دکتر ارکید</td><td></td></tr>
-    <tr><td>پروفسور آلو</td><td></td></tr>
-    <tr><td>آقای سبز</td><td></td></tr>
-    <tr><td>خانم طاووسی</td><td></td></tr>
-    <tr><td>خانم سرخ</td><td></td></tr>
-  </table>
+  <header>
+    <h1>برگه کلُو — نسخهٔ فارسی</h1>
+    <div class="controls">
+      <div class="mode-toggle" title="حالت علامت‌گذاری">
+        <button class="btn" data-mode="cycle" id="mode-cycle" title="هر کلیک حالت را تغییر می‌دهد">حالت: چرخه</button>
+        <button class="btn" data-mode="ok" id="mode-ok" title="هر کلیک حالت را تبدیل به تیک می‌کند">تیک</button>
+        <button class="btn" data-mode="ques" id="mode-ques" title="هر کلیک علامت سؤال می‌گذارد">سؤال</button>
+        <button class="btn" data-mode="bad" id="mode-bad" title="هر کلیک ضربدر می‌گذارد">حذف</button>
+      </div>
+      <button class="btn" id="clear-all" title="حذف همهٔ علامت‌ها">پاک کردن همه</button>
+      <button class="btn" id="export-json" title="کپی وضعیت فعلی (JSON)">کپی JSON</button>
+      <span class="small">وضعیت: <span id="status-text">هیچ</span></span>
+    </div>
+  </header>
 
-  <h2>اسلحه‌ها</h2>
-  <table>
-    <tr><th>نام</th><th>وضعیت</th></tr>
-    <tr><td>چاقو</td><td></td></tr>
-    <tr><td>شمعدان</td><td></td></tr>
-    <tr><td>اسلحهٔ کمری</td><td></td></tr>
-    <tr><td>طناب</td><td></td></tr>
-    <tr><td>لولهٔ سربی</td><td></td></tr>
-    <tr><td>آچار</td><td></td></tr>
-  </table>
+  <main>
+    <section class="card" aria-labelledby="suspects-title">
+      <h2 id="suspects-title">مظنون‌ها</h2>
+      <ul class="item-list" id="suspects">
+        <li class="item" data-id="sus-1"><div class="label">سرهنگ خردل</div><div class="marker none">–</div></li>
+        <li class="item" data-id="sus-2"><div class="label">دکتر ارکید</div><div class="marker none">–</div></li>
+        <li class="item" data-id="sus-3"><div class="label">پروفسور آلو</div><div class="marker none">–</div></li>
+        <li class="item" data-id="sus-4"><div class="label">آقای سبز</div><div class="marker none">–</div></li>
+        <li class="item" data-id="sus-5"><div class="label">خانم پیکاک</div><div class="marker none">–</div></li>
+        <li class="item" data-id="sus-6"><div class="label">خانم رد</div><div class="marker none">–</div></li>
+      </ul>
+    </section>
 
-  <h2>اتاق‌ها</h2>
-  <table>
-    <tr><th>نام</th><th>وضعیت</th></tr>
-    <tr><td>سالن نهارخوری</td><td></td></tr>
-    <tr><td>آشپزخانه</td><td></td></tr>
-    <tr><td>گلخانه</td><td></td></tr>
-    <tr><td>اتاق بیلیارد</td><td></td></tr>
-    <tr><td>کتابخانه</td><td></td></tr>
-    <tr><td>سالون</td><td></td></tr>
-    <tr><td>راهرو</td><td></td></tr>
-    <tr><td>بال روم</td><td></td></tr>
-    <tr><td>اتاق مطالعه</td><td></td></tr>
-  </table>
+    <section class="card" aria-labelledby="weapons-title">
+      <h2 id="weapons-title">اسلحه‌ها</h2>
+      <ul class="item-list" id="weapons">
+        <li class="item" data-id="weap-1"><div class="label">چاقو</div><div class="marker none">–</div></li>
+        <li class="item" data-id="weap-2"><div class="label">شمعدان</div><div class="marker none">–</div></li>
+        <li class="item" data-id="weap-3"><div class="label">اسلحهٔ کمری</div><div class="marker none">–</div></li>
+        <li class="item" data-id="weap-4"><div class="label">طناب</div><div class="marker none">–</div></li>
+        <li class="item" data-id="weap-5"><div class="label">لولهٔ سربی</div><div class="marker none">–</div></li>
+        <li class="item" data-id="weap-6"><div class="label">آچار</div><div class="marker none">–</div></li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="rooms-title">
+      <h2 id="rooms-title">اتاق‌ها</h2>
+      <ul class="item-list" id="rooms">
+        <li class="item" data-id="room-1"><div class="label">سالن ناهارخوری</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-2"><div class="label">آشپزخانه</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-3"><div class="label">گلخانه</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-4"><div class="label">اتاق بیلیارد</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-5"><div class="label">کتابخانه</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-6"><div class="label">سالون</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-7"><div class="label">راهرو</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-8"><div class="label">بال روم</div><div class="marker none">–</div></li>
+        <li class="item" data-id="room-9"><div class="label">اتاق مطالعه</div><div class="marker none">–</div></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="small">ذخیره/بارگذاری: وضعیت در کلیپ‌بورد کپی می‌شود (JSON). می‌توانید بعداً با جاگذاری همین JSON وضعیت را بازیابی کنید.</div>
+  </footer>
+
+  <script>
+    // حالت‌ها: none -> ok -> ques -> bad -> none
+    const cycle = ['none','ok','ques','bad'];
+    let currentMode = 'cycle'; // cycle / ok / ques / bad
+
+    const statusText = document.getElementById('status-text');
+    function setStatus(t){ statusText.innerText = t; }
+
+    // setup mode buttons
+    document.querySelectorAll('.mode-toggle .btn').forEach(b=>{
+      b.addEventListener('click',()=>{
+        document.querySelectorAll('.mode-toggle .btn').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        currentMode = b.dataset.mode;
+        setStatus(currentMode === 'cycle' ? 'حالت چرخه' : (currentMode==='ok'?'تیک':''));
+        if(currentMode==='ques') setStatus('علامت سؤال');
+        if(currentMode==='bad') setStatus('ضربدر');
+      });
+    });
+    // initial active
+    document.getElementById('mode-cycle').classList.add('active');
+
+    // helper: update marker element
+    function applyMarker(markerEl, state){
+      markerEl.classList.remove('none','ok','ques','bad');
+      markerEl.classList.add(state);
+      if(state==='none') markerEl.textContent = '–';
+      else if(state==='ok') markerEl.textContent = '✓';
+      else if(state==='ques') markerEl.textContent = '?';
+      else if(state==='bad') markerEl.textContent = '✖';
+    }
+
+    // on item click
+    document.querySelectorAll('li.item').forEach(li=>{
+      li.addEventListener('click', (ev)=>{
+        const mark = li.querySelector('.marker');
+        // find current state
+        let state = 'none';
+        ['none','ok','ques','bad'].forEach(s=>{
+          if(mark.classList.contains(s)) state = s;
+        });
+
+        if(currentMode === 'cycle'){
+          // go to next in cycle
+          const idx = cycle.indexOf(state);
+          const next = cycle[(idx+1) % cycle.length];
+          applyMarker(mark, next);
+        } else {
+          // set to currentMode (toggle: if same -> set none)
+          if(state === currentMode) applyMarker(mark,'none');
+          else applyMarker(mark,currentMode);
+        }
+      });
+    });
+
+    // clear all
+    document.getElementById('clear-all').addEventListener('click', ()=>{
+      if(!confirm('آیا مطمئن هستید همهٔ علامت‌ها پاک شوند؟')) return;
+      document.querySelectorAll('.marker').forEach(m=>applyMarker(m,'none'));
+    });
+
+    // export JSON (copy to clipboard)
+    document.getElementById('export-json').addEventListener('click', async ()=>{
+      const data = {};
+      document.querySelectorAll('li.item').forEach(li=>{
+        const id = li.dataset.id;
+        const label = li.querySelector('.label').innerText.trim();
+        const marker = li.querySelector('.marker');
+        let state = 'none';
+        ['none','ok','ques','bad'].forEach(s=>{ if(marker.classList.contains(s)) state = s; });
+        data[id] = {label, state};
+      });
+      const json = JSON.stringify(data, null, 2);
+      try{
+        await navigator.clipboard.writeText(json);
+        alert('JSON وضعیت در کلیپ‌بورد کپی شد. می‌توانید آن را ذخیره یا در آینده بارگذاری کنید.');
+      }catch(e){
+        // fallback: show in prompt
+        prompt('در اینجا JSON را کپی کنید:', json);
+      }
+    });
+
+    // Optional: support paste JSON to restore state
+    window.addEventListener('keydown', (e)=>{
+      // Ctrl+V when focused on body? we won't intercept; add a simple menu-less listener:
+      // Use Ctrl+Shift+V to restore (to avoid interfering)
+      if(e.ctrlKey && e.shiftKey && e.key.toLowerCase()==='v'){
+        const raw = prompt('لطفاً JSON وضعیت را جای‌گذاری کنید:');
+        if(!raw) return;
+        try{
+          const obj = JSON.parse(raw);
+          document.querySelectorAll('li.item').forEach(li=>{
+            const id = li.dataset.id;
+            const markEl = li.querySelector('.marker');
+            if(obj[id] && obj[id].state) applyMarker(markEl, obj[id].state);
+            else applyMarker(markEl, 'none');
+          });
+          alert('وضعیت بارگذاری شد.');
+        }catch(err){
+          alert('خطا: JSON معتبر نیست.');
+        }
+      }
+    });
+
+  </script>
 </body>
 </html>
