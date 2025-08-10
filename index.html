@@ -229,14 +229,6 @@
     saveState();
   });
 
-  // export JSON to clipboard
-  document.getElementById('export-json').addEventListener('click', async ()=>{
-    const data = collectState();
-    const json = JSON.stringify(data, null, 2);
-    try { await navigator.clipboard.writeText(json); alert('JSON در کلیپ‌بورد کپی شد.'); }
-    catch(e){ prompt('JSON را کپی کنید:', json); }
-  });
-
   // theme toggle
   const themeBtn = document.getElementById('toggle-theme');
   function setTheme(dark){
