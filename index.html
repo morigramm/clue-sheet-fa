@@ -8,18 +8,17 @@
   body { font-family: sans-serif; direction: rtl; padding: 20px; background: #f9f9f9; color: #000; transition: background 0.3s, color 0.3s; }
   body.dark { background: #1e1e1e; color: #eee; }
   h1 { text-align: center; }
-  ul { list-style: none; padding: 0; }
-  li.item { display: flex; align-items: center; margin: 6px 0; background: #fff; padding: 6px; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); transition: background 0.3s, color 0.3s; }
-  body.dark li.item { background: #2c2c2c; }
-  .marker { display: inline-block; width: 26px; height: 26px; border-radius: 4px; text-align: center; line-height: 24px; font-weight: bold; cursor: pointer; margin-left: 8px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+  body.dark th, body.dark td { border-color: #555; }
+  .marker { display: inline-block; width: 26px; height: 26px; border-radius: 4px; text-align: center; line-height: 24px; font-weight: bold; cursor: pointer; }
   .marker.none { background: #eee; color: #aaa; }
   body.dark .marker.none { background: #555; color: #999; }
   .marker.ok { background: rgba(0,128,0,0.15); color: green; border: 1px solid rgba(0,128,0,0.3); }
   .marker.ques { background: rgba(0,0,0,0.06); color: black; border: 1px solid rgba(0,0,0,0.16); }
   body.dark .marker.ques { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); }
   .marker.bad { background: rgba(255,0,0,0.15); color: red; border: 1px solid rgba(255,0,0,0.3); }
-  .desc { flex: 1; }
-  .note { width: 120px; margin-right: 8px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; background: #fff; color: #000; transition: background 0.3s, color 0.3s, border 0.3s; }
+  .note { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
   body.dark .note { background: #444; color: #fff; border: 1px solid #777; }
   #toggleDark { margin-bottom: 15px; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; background: #333; color: white; }
   body.dark #toggleDark { background: #ccc; color: black; }
@@ -31,26 +30,58 @@
 
 <h1>برگه تحقیقات کلودو — فارسی</h1>
 
-<h2>مظنون‌ها</h2>
-<ul>
-  <li class="item"><span class="marker none">–</span><span class="desc">سرهنگ خردل</span><input type="text" class="note"></li>
-  <li class="item"><span class="marker none">–</span><span class="desc">دکتر ارکید</span><input type="text" class="note"></li>
-  <li class="item"><span class="marker none">–</span><span class="desc">پروفسور آلو</span><input type="text" class="note"></li>
-</ul>
-
-<h2>اسلحه‌ها</h2>
-<ul>
-  <li class="item"><span class="marker none">–</span><span class="desc">چاقو</span><input type="text" class="note"></li>
-  <li class="item"><span class="marker none">–</span><span class="desc">شمعدان</span><input type="text" class="note"></li>
-  <li class="item"><span class="marker none">–</span><span class="desc">اسلحه کمری</span><input type="text" class="note"></li>
-</ul>
-
-<h2>اتاق‌ها</h2>
-<ul>
-  <li class="item"><span class="marker none">–</span><span class="desc">آشپزخانه</span><input type="text" class="note"></li>
-  <li class="item"><span class="marker none">–</span><span class="desc">کتابخانه</span><input type="text" class="note"></li>
-  <li class="item"><span class="marker none">–</span><span class="desc">سالون</span><input type="text" class="note"></li>
-</ul>
+<table>
+  <tr>
+    <th>آیتم</th>
+    <th>علامت</th>
+    <th>توضیحات</th>
+  </tr>
+  <tr>
+    <td>سرهنگ خردل</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>دکتر ارکید</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>پروفسور آلو</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>چاقو</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>شمعدان</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>اسلحه کمری</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>آشپزخانه</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>کتابخانه</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+  <tr>
+    <td>سالون</td>
+    <td><span class="marker none">–</span></td>
+    <td><input type="text" class="note"></td>
+  </tr>
+</table>
 
 <script>
   const cycle = ['bad','ques','ok','none'];
@@ -64,8 +95,7 @@
     else if(state==='bad') markerEl.textContent = '✖';
   }
 
-  document.querySelectorAll('li.item').forEach(li=>{
-    const marker = li.querySelector('.marker');
+  document.querySelectorAll('.marker').forEach(marker=>{
     marker.addEventListener('click', ()=>{
       let state = 'none';
       ['none','ok','ques','bad'].forEach(s=>{
